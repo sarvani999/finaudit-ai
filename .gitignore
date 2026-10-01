@@ -1,0 +1,24 @@
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Environment Variables & Secrets (VERY IMPORTANT)
+.env
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+
+# Docker Local Data
+pgdata/
+
+# IDE / Editor Settings
+.vscode/
+.idea/
+
+# OS specific files
+.DS_Store
+Thumbs.db
