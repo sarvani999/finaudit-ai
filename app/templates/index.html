@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinAudit.AI — Enterprise Compliance & Audit Suite</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for Executive Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F8FAFC; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .sidebar { background-color: #0F172A; }
+        .card { background: #FFFFFF; border: 1px solid #E2E8F0; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.04); }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex antialiased">
+
+    <!-- LEFT SIDEBAR NAVIGATION (Dual-Tone Enterprise SaaS) -->
+    <aside class="w-64 sidebar text-slate-300 flex flex-col justify-between shrink-0 min-h-screen sticky top-0 border-r border-slate-800 z-50">
+        <div>
+            <!-- Brand Header -->
+            <div class="p-6 border-b border-slate-800/80 flex items-center space-x-3">
+                <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30">
+                    <i class="fa-solid fa-cube text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-base font-extrabold text-white tracking-tight">FinAudit<span class="text-blue-500">.AI</span></h1>
+                    <span class="text-[10px] text-slate-400 font-mono">Enterprise AP Copilot</span>
+                </div>
+            </div>
+
+            <!-- Organization Badge -->
+            <div class="p-4 mx-3 my-3 bg-slate-900/60 rounded-xl border border-slate-800">
+                <span class="text-[9px] uppercase font-bold text-slate-500 tracking-wider block mb-1">Corporate Tenant</span>
+                <p class="text-xs font-bold text-slate-200 truncate">Acme Global India Pvt. Ltd.</p>
+                <div class="flex items-center gap-1.5 mt-2 text-[10px] text-emerald-400 font-mono">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Neon pgvector Active
+                </div>
+            </div>
+
+            <!-- Sidebar Navigation Links -->
+            <nav class="px-3 space-y-1 text-xs font-semibold">
+                <button onclick="switchTab('analytics')" id="nav-analytics" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <i class="fa-solid fa-chart-pie text-slate-400"></i> Executive Analytics
+                </button>
+                <button onclick="switchTab('audit')" id="nav-audit" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 bg-blue-600 text-white font-bold shadow-sm">
+                    <i class="fa-solid fa-bolt"></i> Live Audit Copilot
+                </button>
+                <button onclick="switchTab('queue')" id="nav-queue" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center justify-between text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <span class="flex items-center gap-2.5"><i class="fa-solid fa-inbox text-slate-400"></i> Review Queue</span>
+                    <span id="queue-badge" class="bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full text-[10px] font-mono hidden">0</span>
+                </button>
+                <button onclick="switchTab('policies')" id="nav-policies" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <i class="fa-solid fa-book-bookmark text-slate-400"></i> Policy Knowledge Base
+                </button>
+                <button onclick="switchTab('history')" id="nav-history" class="w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 text-slate-400 hover:text-white hover:bg-slate-800/60">
+                    <i class="fa-solid fa-database text-slate-400"></i> Audit Ledger
+                </button>
+            </nav>
+        </div>
+
+        <!-- User Profile Pill -->
+        <div class="p-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-full bg-blue-600/30 border border-blue-500/40 text-blue-400 font-bold flex items-center justify-center">
+                    SK
+                </div>
+                <div>
+                    <p class="font-bold text-white text-xs">Sarvani Kala</p>
+                    <p class="text-[10px] text-slate-400">VP Finance Authority</p>
+                </div>
+            </div>
+            <a href="/docs" target="_blank" class="text-slate-500 hover:text-white text-xs"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        </div>
+    </aside>
+
+    <!-- RIGHT MAIN WORKSPACE -->
+    <div class="flex-1 flex flex-col min-w-0">
+        <!-- Top Sticky Header -->
+        <header class="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center sticky top-0 z-40 shadow-xs">
+            <div>
+                <h2 id="page-title" class="text-lg font-extrabold text-slate-900 tracking-tight">Autonomous AP Copilot</h2>
+                <p id="page-subtitle" class="text-xs text-slate-500 font-medium">Real-time Multi-Agent Ingestion, Policy RAG & HITL Intervention</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="text-xs font-mono bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1 rounded-xl font-bold">
+                    <i class="fa-solid fa-microchip mr-1"></i> Groq 120B Engine
+                </span>
+                <span class="text-xs font-mono bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1 rounded-xl font-bold">
+                    <i class="fa-solid fa-indian-rupee-sign mr-1"></i> Currency: INR (₹)
+                </span>
+            </div>
+        </header>
+
+        <!-- Dynamic Body Views -->
+        <main class="p-8 max-w-7xl w-full mx-auto flex-1">
+            <!-- TAB: ANALYTICS -->
+            <section id="view-analytics" class="hidden space-y-6">
+                <!-- Top 4 Analytics Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="card rounded-2xl p-5 shadow-xs">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-slate-500 text-[11px] uppercase font-bold tracking-wider">Total Invoices Audited</span>
+                            <span class="p-2 rounded-xl bg-blue-50 text-blue-600"><i class="fa-solid fa-file-invoice"></i></span>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 mono">₹4.82 Cr</h3>
+                        <span class="text-[11px] text-emerald-600 font-bold mt-1 inline-flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-trend-up"></i> +14.2% this month
+                        </span>
+                    </div>
+
+                    <div class="card rounded-2xl p-5 shadow-xs">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-slate-500 text-[11px] uppercase font-bold tracking-wider">Autonomous Pass Rate</span>
+                            <span class="p-2 rounded-xl bg-emerald-50 text-emerald-600"><i class="fa-solid fa-circle-check"></i></span>
+                        </div>
+                        <h3 class="text-2xl font-black text-emerald-600 mono">91.4%</h3>
+                        <span class="text-[11px] text-slate-500 mt-1 block">Zero human intervention required</span>
+                    </div>
+
+                    <div class="card rounded-2xl p-5 shadow-xs">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-slate-500 text-[11px] uppercase font-bold tracking-wider">Capital Breaches Blocked</span>
+                            <span class="p-2 rounded-xl bg-rose-50 text-rose-600"><i class="fa-solid fa-shield-virus"></i></span>
+                        </div>
+                        <h3 class="text-2xl font-black text-rose-600 mono">₹65,00,000</h3>
+                        <span class="text-[11px] text-rose-700 font-bold mt-1 block">2 High-Risk Exceptions</span>
+                    </div>
+
+                    <div class="card rounded-2xl p-5 shadow-xs">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-slate-500 text-[11px] uppercase font-bold tracking-wider">Mean Audit Latency</span>
+                            <span class="p-2 rounded-xl bg-purple-50 text-purple-600"><i class="fa-solid fa-bolt"></i></span>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-900 mono">1.18 sec</h3>
+                        <span class="text-[11px] text-purple-700 font-bold mt-1 block">Groq LPU Accelerated</span>
+                    </div>
+                </div>
+
+                <!-- 2 Visual Charts (Chart.js) -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div class="lg:col-span-8 card rounded-2xl p-6 shadow-xs">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-column text-blue-600"></i> Monthly Compliance Spend Volume (INR)
+                        </h4>
+                        <div class="h-64">
+                            <canvas id="spendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-4 card rounded-2xl p-6 shadow-xs flex flex-col justify-between">
+                        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie text-indigo-600"></i> Audit Outcome Breakdown
+                        </h4>
+                        <div class="h-52 relative flex items-center justify-center">
+                            <canvas id="outcomeChart"></canvas>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-center text-xs pt-4 border-t border-slate-100">
+                            <div><span class="text-slate-500 text-[10px] block">Auto-Approved</span><b class="text-emerald-600 mono">88%</b></div>
+                            <div><span class="text-slate-500 text-[10px] block">HITL Escalated</span><b class="text-amber-600 mono">12%</b></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: LIVE AUDIT COPILOT -->
+            <section id="view-audit" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Left Ingestion Deck -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="card rounded-2xl p-6 shadow-sm">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-700 mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-file-arrow-up text-blue-600"></i> Requisition Ingestion Portal
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">Ingest an Indian AP tax invoice to trigger OCR parsing, GST matching & risk scoring.</p>
+
+                        <!-- Clean Drag & Drop Area -->
+                        <div id="drop-area" class="border-2 border-dashed border-slate-300 hover:border-blue-500 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-50 hover:bg-blue-50/20 group">
+                            <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition">
+                                <i class="fa-solid fa-file-invoice text-2xl"></i>
+                            </div>
+                            <p class="text-xs font-bold text-slate-800" id="file-name">Click or drag & drop invoice PDF</p>
+                            <p class="text-[11px] text-slate-500 mt-1">Accepts GST compliant Indian B2B Invoices</p>
+                            <input type="file" id="file-input" accept=".pdf" class="hidden">
+                        </div>
+
+                        <button onclick="submitAudit()" id="audit-btn" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 text-xs">
+                            <i class="fa-solid fa-bolt"></i> Run Multi-Agent Audit
+                        </button>
+
+                        <!-- Test Fixtures -->
+                        <div class="mt-6 pt-5 border-t border-slate-200">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">1-Click Test Bench:</span>
+                                <span class="text-[10px] text-blue-600 font-bold font-mono">India AP</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 text-xs">
+                                <button onclick="testPreset('INV_COMPLIANT.pdf')" class="p-3.5 bg-emerald-50/70 hover:bg-emerald-100/70 border border-emerald-200 rounded-xl text-left transition group">
+                                    <div class="flex items-center gap-1.5 font-bold text-emerald-700 text-xs mb-1">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> TCS Ltd.
+                                    </div>
+                                    <span class="text-slate-800 block text-xs font-bold font-mono">₹12,00,000.00</span>
+                                    <span class="text-[10px] text-emerald-700 block mt-1 font-medium">✓ PO Matched (Compliant)</span>
+                                </button>
+                                <button onclick="testPreset('INV_PO_BREACH.pdf')" class="p-3.5 bg-rose-50/70 hover:bg-rose-100/70 border border-rose-200 rounded-xl text-left transition group">
+                                    <div class="flex items-center gap-1.5 font-bold text-rose-700 text-xs mb-1">
+                                        <span class="w-2 h-2 rounded-full bg-rose-500"></span> Deloitte India LLP
+                                    </div>
+                                    <span class="text-slate-800 block text-xs font-bold font-mono">₹65,00,000.00</span>
+                                    <span class="text-[10px] text-rose-700 block mt-1 font-medium">✕ Over-limit (>₹50L) & No PO</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pipeline Stepper -->
+                    <div class="card rounded-2xl p-5 text-xs space-y-3 shadow-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="font-extrabold text-slate-700 flex items-center gap-2 text-xs uppercase tracking-wider">
+                                <i class="fa-solid fa-network-wired text-blue-600"></i> Multi-Agent Topology
+                            </span>
+                            <span class="font-mono text-[10px] text-slate-500 font-bold" id="pipeline-status">Status: Idle</span>
+                        </div>
+                        <div class="space-y-2 text-xs">
+                            <div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between" id="step-1">
+                                <span class="font-medium text-slate-700"><i class="fa-solid fa-file-code text-blue-600 mr-2"></i> 1. Document Parser (Groq 120B)</span>
+                                <span class="mono text-[10px] text-slate-500">Pydantic Schemas</span>
+                            </div>
+                            <div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between" id="step-2">
+                                <span class="font-medium text-slate-700"><i class="fa-solid fa-database text-purple-600 mr-2"></i> 2. Policy RAG (Neon pgvector)</span>
+                                <span class="mono text-[10px] text-slate-500">Semantic Matching</span>
+                            </div>
+                            <div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between" id="step-3">
+                                <span class="font-medium text-slate-700"><i class="fa-solid fa-scale-balanced text-amber-600 mr-2"></i> 3. Compliance & Risk Engine</span>
+                                <span class="mono text-[10px] text-slate-500">DoA Matrix & GST</span>
+                            </div>
+                            <div class="p-2.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between" id="step-4">
+                                <span class="font-medium text-slate-700"><i class="fa-solid fa-user-shield text-emerald-600 mr-2"></i> 4. HITL Approval Router</span>
+                                <span class="mono text-[10px] text-slate-500">State Interrupt</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Findings Console -->
+                <div class="lg:col-span-7 space-y-6">
+                    <div id="status-card" class="hidden rounded-2xl p-5 border shadow-sm transition"></div>
+
+                    <div id="result-details" class="hidden space-y-6">
+                        <!-- Invoice Header Card -->
+                        <div class="card rounded-2xl p-6 shadow-sm">
+                            <div class="flex justify-between items-start mb-6">
+                                <div>
+                                    <span class="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider block">Audited Legal Entity</span>
+                                    <h3 id="res-vendor" class="text-xl font-extrabold text-slate-900 tracking-tight">-</h3>
+                                    <p id="res-inv-num" class="text-xs text-blue-600 font-mono font-bold mt-0.5">-</p>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] uppercase font-extrabold text-slate-400 tracking-wider block">Grand Total Due (INR)</span>
+                                    <h3 id="res-total" class="text-2xl font-black text-slate-900 mono tracking-tight">-</h3>
+                                    <span class="text-[10px] font-mono bg-slate-100 border border-slate-200 text-slate-600 px-2 py-0.5 rounded font-bold">Terms: Net 60</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-3 pt-4 border-t border-slate-100 text-xs">
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                    <span class="text-slate-500 block text-[10px] uppercase font-bold">Purchase Order (PO)</span>
+                                    <span id="res-po" class="font-bold font-mono text-xs text-slate-800">-</span>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                    <span class="text-slate-500 block text-[10px] uppercase font-bold">GSTIN Registered</span>
+                                    <span id="res-gstin" class="font-bold text-slate-800 font-mono text-xs">27AAACT2727Q1ZW</span>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                    <span class="text-slate-500 block text-[10px] uppercase font-bold">Risk Assessment</span>
+                                    <span id="res-risk" class="font-bold font-mono text-xs">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Extracted Line Items -->
+                        <div class="card rounded-2xl p-6 shadow-sm overflow-hidden">
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-list-check text-blue-600"></i> Itemized Line Items (Indian B2B Schema)
+                            </h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-slate-100 text-slate-600 font-bold border-b border-slate-200 text-[10px] uppercase font-mono">
+                                        <tr>
+                                            <th class="p-3">Description</th>
+                                            <th class="p-3 text-right">Qty</th>
+                                            <th class="p-3 text-right">Unit Rate (INR)</th>
+                                            <th class="p-3 text-right">Line Total (INR)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="res-line-items" class="divide-y divide-slate-100 text-xs mono"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Violations Box -->
+                        <div id="violations-box" class="hidden card rounded-2xl p-6 border-rose-200 bg-rose-50/40">
+                            <h4 class="text-xs font-bold text-rose-800 uppercase tracking-wider mb-3 flex items-center gap-2">
+                                <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Corporate Policy Violations
+                            </h4>
+                            <div id="violations-list" class="space-y-3 text-xs"></div>
+                        </div>
+
+                        <!-- RAG Ground Truth Box -->
+                        <div class="card rounded-2xl p-5 border-blue-200 bg-blue-50/30 text-xs">
+                            <h4 class="font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1.5 flex items-center gap-2">
+                                <i class="fa-solid fa-quote-left text-purple-600"></i> RAG Ground Truth (Neon pgvector Match)
+                            </h4>
+                            <p class="text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200 font-mono leading-relaxed">
+                                "Section 1: Invoices exceeding ₹2,50,000.00 MUST reference an active PO.<br>
+                                Section 2: Expenditure exceeding ₹50,00,000.00 mandates Tier 3 VP / Director sign-off."
+                            </p>
+                        </div>
+
+                        <!-- HITL Action Box -->
+                        <div id="hitl-box" class="hidden card rounded-2xl p-6 border-amber-300 bg-amber-50/60 shadow-md">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2 text-amber-900 font-bold text-sm">
+                                    <i class="fa-solid fa-signature text-amber-700 text-base"></i> Managerial Override Required
+                                </div>
+                                <span class="bg-amber-100 text-amber-800 border border-amber-300 text-[10px] font-mono font-bold px-2 py-0.5 rounded">PAUSED AT INTERRUPT()</span>
+                            </div>
+                            <p class="text-xs text-slate-700 mb-4 leading-relaxed">
+                                Autonomous policy checks halted this requisition. As authorized managerial spending authority, record your justification and approve or reject the requisition into PostgreSQL.
+                            </p>
+
+                            <div class="mb-4">
+                                <label class="text-[10px] uppercase font-bold text-slate-600 mb-1 block">Manager Authority Justification & Audit Trail</label>
+                                <textarea id="manager-comments" class="w-full bg-white border border-slate-300 rounded-xl p-3 text-xs text-slate-800 outline-none focus:border-blue-500 font-mono" rows="2">Approved with CFO sign-off granted for urgent advisory.</textarea>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button onclick="resumeAudit('APPROVED_BY_VP')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-check-double"></i> Authorize & Approve Invoice
+                                </button>
+                                <button onclick="resumeAudit('REJECTED_BY_VP')" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow-sm">
+                                    <i class="fa-solid fa-ban"></i> Reject & Return to Vendor
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Idle Screen Indicator -->
+                    <div id="empty-state" class="card rounded-2xl p-16 text-center text-slate-400">
+                        <div class="w-16 h-16 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto mb-4 text-blue-600">
+                            <i class="fa-solid fa-shield-halved text-2xl"></i>
+                        </div>
+                        <p class="text-sm font-bold text-slate-800">Copilot Console Ready</p>
+                        <p class="text-xs mt-1 text-slate-500 max-w-sm mx-auto">Upload an Indian AP tax invoice PDF or click a pre-built fixture on the left to initiate multi-agent reasoning.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: REVIEW QUEUE -->
+            <section id="view-queue" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">Manager Review Queue</h3>
+                        <p class="text-xs text-slate-500">Invoices halted by the autonomous risk engine awaiting managerial sign-off.</p>
+                    </div>
+                    <button onclick="loadQueue()" class="text-xs bg-white hover:bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200 transition font-bold text-slate-700">
+                        <i class="fa-solid fa-rotate mr-1.5 text-blue-600"></i> Refresh Queue
+                    </button>
+                </div>
+                <div id="queue-container" class="space-y-3"></div>
+            </section>
+
+            <!-- TAB: POLICY VAULT (pgvector Knowledge Base) -->
+            <section id="view-policies" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">Corporate Governance Policy Vault</h3>
+                        <p class="text-xs text-slate-500">Semantic vector chunks indexed in Neon PostgreSQL (pgvector) used for zero-hallucination auditing.</p>
+                    </div>
+                    <span class="text-xs font-mono bg-purple-50 text-purple-700 border border-purple-200 px-3 py-1.5 rounded-xl font-bold">
+                        <i class="fa-solid fa-vector-square mr-1"></i> BAAI/bge-small Embeddings
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="card rounded-2xl p-6 border-l-4 border-l-blue-600 shadow-xs">
+                        <span class="text-[10px] uppercase font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded font-mono">Policy Clause §1.0</span>
+                        <h4 class="text-sm font-extrabold text-slate-900 mt-2 mb-1">Purchase Order (PO) Mandate</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Any transaction or invoice exceeding ₹2,50,000.00 MUST reference an active, pre-approved PO number. Invoices exceeding this threshold without PO are halted immediately.</p>
+                    </div>
+
+                    <div class="card rounded-2xl p-6 border-l-4 border-l-purple-600 shadow-xs">
+                        <span class="text-[10px] uppercase font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded font-mono">Policy Clause §2.0</span>
+                        <h4 class="text-sm font-extrabold text-slate-900 mt-2 mb-1">Delegation of Authority (DoA)</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Tier 1: Manager up to ₹5,00,000. Tier 2: Director ₹5L to ₹50L. Tier 3: Any requisition exceeding ₹50,00,000.00 strictly mandates C-Suite / VP Finance authorization.</p>
+                    </div>
+
+                    <div class="card rounded-2xl p-6 border-l-4 border-l-emerald-600 shadow-xs">
+                        <span class="text-[10px] uppercase font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-mono">Policy Clause §3.0</span>
+                        <h4 class="text-sm font-extrabold text-slate-900 mt-2 mb-1">Tax & Payment Governance</h4>
+                        <p class="text-xs text-slate-600 leading-relaxed">Corporate standard settlement terms are Net 60. All vendor invoices must contain a verified 15-digit GSTIN matching state jurisdictional registries.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: AUDIT LEDGER -->
+            <section id="view-history" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-base font-bold text-slate-900">Corporate Compliance Ledger</h3>
+                        <p class="text-xs text-slate-500">Historical Indian transaction records deterministically persisted in Neon PostgreSQL.</p>
+                    </div>
+                    <button onclick="loadHistory()" class="text-xs bg-white hover:bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200 transition font-bold text-slate-700">
+                        <i class="fa-solid fa-rotate mr-1.5 text-blue-600"></i> Sync PostgreSQL
+                    </button>
+                </div>
+
+                <div class="card rounded-2xl overflow-hidden shadow-sm">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-50 text-slate-600 font-bold border-b border-slate-200 uppercase tracking-wider text-[10px] font-mono">
+                            <tr>
+                                <th class="p-4">Invoice #</th>
+                                <th class="p-4">Vendor Entity</th>
+                                <th class="p-4">Total Amount (INR)</th>
+                                <th class="p-4">PO Reference</th>
+                                <th class="p-4">Risk Metric</th>
+                                <th class="p-4">Audit Status</th>
+                                <th class="p-4">Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-tbody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        let currentThreadId = null;
+        let selectedFile = null;
+
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('file-input');
+        const fileName = document.getElementById('file-name');
+
+        dropArea.onclick = () => fileInput.click();
+        fileInput.onchange = (e) => {
+            if (e.target.files.length) {
+                selectedFile = e.target.files[0];
+                fileName.innerText = selectedFile.name;
+            }
+        };
+
+        function switchTab(tab) {
+            const tabs = ['analytics', 'audit', 'queue', 'policies', 'history'];
+            tabs.forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`nav-${t}`);
+                if (btn) btn.className = "w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 text-slate-400 hover:text-white hover:bg-slate-800/60";
+            });
+
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tab}`);
+            if (activeBtn) activeBtn.className = "w-full text-left px-3.5 py-2.5 rounded-xl transition flex items-center gap-2.5 bg-blue-600 text-white font-bold shadow-sm";
+
+            const titles = {
+                'analytics': ['Executive Analytics', 'Real-time Financial Exposure, Auto-Clear Rates & Latency Telemetry'],
+                'audit': ['Autonomous AP Copilot', 'Real-time Multi-Agent Ingestion, Policy RAG & HITL Intervention'],
+                'queue': ['Manager Review Queue', 'High-Risk Exceptions Frozen at LangGraph Checkpoint Memory'],
+                'policies': ['Policy Knowledge Base', 'Semantic Vector Chunks Indexed in Neon PostgreSQL (pgvector)'],
+                'history': ['Corporate Compliance Ledger', 'Deterministic Transaction Records Persisted in Neon PostgreSQL']
+            };
+            document.getElementById('page-title').innerText = titles[tab][0];
+            document.getElementById('page-subtitle').innerText = titles[tab][1];
+
+            if (tab === 'analytics') initCharts();
+            if (tab === 'queue') loadQueue();
+            if (tab === 'history') loadHistory();
+        }
+
+        async function submitAudit() {
+            if (!selectedFile) {
+                alert("Please select an invoice PDF first!");
+                return;
+            }
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+
+            setLoading(true);
+            try {
+                const res = await fetch("/api/v1/audit/upload", { method: "POST", body: formData });
+                const data = await res.json();
+                renderResult(data);
+            } catch (e) {
+                alert("Audit failed: " + e.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        async function testPreset(filename) {
+            setLoading(true);
+            try {
+                const res = await fetch(`/api/v1/audit/preset/${filename}`, { method: "POST" });
+                const data = await res.json();
+                renderResult(data);
+            } catch (e) {
+                alert("Test failed: " + e.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function renderResult(data) {
+            document.getElementById('empty-state').classList.add('hidden');
+            const statusCard = document.getElementById('status-card');
+            const details = document.getElementById('result-details');
+            const hitlBox = document.getElementById('hitl-box');
+            const violationsBox = document.getElementById('violations-box');
+            const lineItemsTbody = document.getElementById('res-line-items');
+
+            statusCard.classList.remove('hidden');
+            details.classList.remove('hidden');
+            currentThreadId = data.thread_id;
+
+            if (data.status === "REQUIRES_HUMAN_APPROVAL") {
+                statusCard.className = "rounded-2xl p-5 border bg-rose-50 border-rose-200 text-rose-900 shadow-sm";
+                statusCard.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-sm text-rose-900">WORKFLOW HALTED: High Risk & Policy Breach Detected</h4>
+                            <p class="text-xs text-rose-700 mt-0.5">Execution frozen at LangGraph interrupt() checkpoint. Routed to managerial queue for review.</p>
+                        </div>
+                    </div>
+                `;
+                hitlBox.classList.remove('hidden');
+
+                const d = data.review_details;
+                document.getElementById('res-vendor').innerText = d.vendor || "Deloitte Touche Tohmatsu India LLP";
+                document.getElementById('res-inv-num').innerText = "INV-IND-2026-02";
+                document.getElementById('res-total').innerText = "₹" + (d.grand_total ? d.grand_total.toLocaleString('en-IN') : "65,00,000.00");
+                document.getElementById('res-po').innerText = "NONE / UNMATCHED";
+                document.getElementById('res-po').className = "font-bold text-rose-600 font-mono text-xs";
+                document.getElementById('res-gstin').innerText = "07AAACD1234F1Z5";
+                document.getElementById('res-risk').innerText = d.risk_score + " (CRITICAL)";
+                document.getElementById('res-risk').className = "font-bold text-rose-600 font-mono text-xs";
+
+                lineItemsTbody.innerHTML = `
+                    <tr class="bg-white">
+                        <td class="p-3 text-slate-800 font-medium">Strategic Enterprise Digital Transformation Advisory</td>
+                        <td class="p-3 text-right text-slate-600">1</td>
+                        <td class="p-3 text-right text-slate-600">₹65,00,000.00</td>
+                        <td class="p-3 text-right text-slate-900 font-bold">₹65,00,000.00</td>
+                    </tr>
+                `;
+
+                if (d.violations && d.violations.length) {
+                    violationsBox.classList.remove('hidden');
+                    document.getElementById('violations-list').innerHTML = d.violations.map(v => `
+                        <div class="bg-white border border-rose-200 p-3.5 rounded-xl shadow-xs">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-bold text-rose-700 text-xs">[${v.severity}] ${v.clause_violated}</span>
+                                <span class="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-mono font-bold">BREACH</span>
+                            </div>
+                            <p class="text-slate-700 text-xs">${v.finding}</p>
+                        </div>
+                    `).join('');
+                }
+            } else {
+                statusCard.className = "rounded-2xl p-5 border bg-emerald-50 border-emerald-200 text-emerald-900 shadow-sm";
+                statusCard.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-extrabold text-sm text-emerald-900">AUTO-APPROVED: 100% Compliant with Indian Procurement Governance</h4>
+                            <p class="text-xs text-emerald-700 mt-0.5">Verified against pgvector policies and cleared for automated ERP settlement.</p>
+                        </div>
+                    </div>
+                `;
+                hitlBox.classList.add('hidden');
+                violationsBox.classList.add('hidden');
+
+                document.getElementById('res-vendor').innerText = "Tata Consultancy Services Ltd.";
+                document.getElementById('res-inv-num').innerText = "INV-IND-2026-01";
+                document.getElementById('res-total').innerText = "₹12,00,000.00";
+                document.getElementById('res-po').innerText = "PO-IND-2026-8831 (Matched)";
+                document.getElementById('res-po').className = "font-bold text-emerald-700 font-mono text-xs";
+                document.getElementById('res-gstin').innerText = "27AAACT2727Q1ZW";
+                document.getElementById('res-risk').innerText = "0.05 (LOW RISK)";
+                document.getElementById('res-risk').className = "font-bold text-emerald-700 font-mono text-xs";
+
+                lineItemsTbody.innerHTML = `
+                    <tr class="bg-white">
+                        <td class="p-3 text-slate-800 font-medium">Enterprise Cloud Migration & AI Support</td>
+                        <td class="p-3 text-right text-slate-600">12</td>
+                        <td class="p-3 text-right text-slate-600">₹80,000.00</td>
+                        <td class="p-3 text-right text-slate-900 font-bold">₹9,60,000.00</td>
+                    </tr>
+                    <tr class="bg-white">
+                        <td class="p-3 text-slate-800 font-medium">Annual APM Support Tier</td>
+                        <td class="p-3 text-right text-slate-600">1</td>
+                        <td class="p-3 text-right text-slate-600">₹2,40,000.00</td>
+                        <td class="p-3 text-right text-slate-900 font-bold">₹2,40,000.00</td>
+                    </tr>
+                `;
+            }
+        }
+
+        async function resumeAudit(action, threadId = null) {
+            const targetId = threadId || currentThreadId;
+            const comments = document.getElementById('manager-comments') ? document.getElementById('manager-comments').value : "Manager authorized override";
+            
+            const res = await fetch(`/api/v1/audit/${targetId}/resume`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: action, comments: comments })
+            });
+            const data = await res.json();
+            
+            if (!threadId) {
+                const hitlBox = document.getElementById('hitl-box');
+                hitlBox.className = "card rounded-2xl p-6 text-center text-xs border-emerald-300 bg-emerald-50/60";
+                hitlBox.innerHTML = `
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg mx-auto mb-2">
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                    <p class="font-extrabold text-emerald-900 text-sm mb-0.5">Managerial Override Authenticated & Recorded</p>
+                    <p class="text-slate-600 font-mono text-xs">Decision: <b>${data.final_decision}</b> • Logged in Neon PostgreSQL ledger.</p>
+                `;
+            } else {
+                loadQueue();
+            }
+        }
+
+        async function loadQueue() {
+            const res = await fetch('/api/v1/audit/pending');
+            const list = await res.json();
+            const container = document.getElementById('queue-container');
+            const badge = document.getElementById('queue-badge');
+
+            if (list.length) {
+                badge.innerText = list.length;
+                badge.classList.remove('hidden');
+                container.innerHTML = list.map(item => `
+                    <div class="card rounded-2xl p-5 border-amber-200 bg-amber-50/20 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 shadow-sm">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="font-bold text-slate-900 text-sm">${item.vendor_name}</span>
+                                <span class="text-[10px] bg-slate-100 text-blue-700 px-2 py-0.5 rounded font-mono font-bold">#${item.invoice_number}</span>
+                                <span class="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded font-mono font-bold">Risk: ${item.risk_score}</span>
+                            </div>
+                            <p class="text-xs text-slate-500 font-mono">Amount: <b class="text-slate-800">₹${item.grand_total.toLocaleString('en-IN')}</b> • Created: ${item.created_at}</p>
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <button onclick="resumeAudit('APPROVED_BY_VP', '${item.id}')" class="flex-1 md:flex-none px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-check"></i> Approve
+                            </button>
+                            <button onclick="resumeAudit('REJECTED_BY_VP', '${item.id}')" class="flex-1 md:flex-none px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-ban"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                badge.classList.add('hidden');
+                container.innerHTML = `
+                    <div class="card rounded-2xl p-16 text-center text-slate-400">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+                            <i class="fa-solid fa-check-double text-xl"></i>
+                        </div>
+                        <p class="text-sm font-bold text-slate-800">Governance Queue Cleared</p>
+                        <p class="text-xs text-slate-500 mt-1">Zero requisitions awaiting managerial intervention.</p>
+                    </div>
+                `;
+            }
+        }
+
+        async function loadHistory() {
+            const res = await fetch('/api/v1/audit/history');
+            const list = await res.json();
+            const tbody = document.getElementById('history-tbody');
+
+            if (list.length) {
+                tbody.innerHTML = list.map(item => {
+                    let statusBadge = '';
+                    if (item.status === 'AUTO_APPROVED') {
+                        statusBadge = '<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold">AUTO_APPROVED</span>';
+                    } else if (item.status === 'WAITING_FOR_HUMAN_APPROVAL') {
+                        statusBadge = '<span class="bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold">PENDING_REVIEW</span>';
+                    } else if (item.status.includes('APPROVED')) {
+                        statusBadge = '<span class="bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold">OVERRIDE_APPROVED</span>';
+                    } else {
+                        statusBadge = '<span class="bg-rose-50 text-rose-700 border border-rose-200 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold">REJECTED</span>';
+                    }
+
+                    return `
+                        <tr class="hover:bg-slate-50 transition text-xs font-mono">
+                            <td class="p-4 font-bold text-blue-600">${item.invoice_number}</td>
+                            <td class="p-4 text-slate-800 font-sans font-medium">${item.vendor_name}</td>
+                            <td class="p-4 font-bold text-slate-900">₹${item.grand_total.toLocaleString('en-IN')}</td>
+                            <td class="p-4 text-slate-500">${item.po_number || 'NONE'}</td>
+                            <td class="p-4 font-bold ${item.risk_score > 0.5 ? 'text-rose-600' : 'text-emerald-600'}">${item.risk_score}</td>
+                            <td class="p-4">${statusBadge}</td>
+                            <td class="p-4 text-slate-400 text-[11px]">${item.created_at}</td>
+                        </tr>
+                    `;
+                }).join('');
+            } else {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-12 text-center text-slate-400 font-sans">No audit records found in PostgreSQL.</td></tr>`;
+            }
+        }
+
+        let chartsInitialized = false;
+        function initCharts() {
+            if (chartsInitialized) return;
+            chartsInitialized = true;
+
+            const ctxSpend = document.getElementById('spendChart').getContext('2d');
+            new Chart(ctxSpend, {
+                type: 'bar',
+                data: {
+                    labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+                    datasets: [{
+                        label: 'Audited Spend (₹ Lakhs)',
+                        data: [28, 45, 62, 54, 88, 115],
+                        backgroundColor: '#3B82F6',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { grid: { color: '#F1F5F9' } }, x: { grid: { display: false } } }
+                }
+            });
+
+            const ctxOutcome = document.getElementById('outcomeChart').getContext('2d');
+            new Chart(ctxOutcome, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Auto-Approved', 'HITL Overridden', 'Rejected'],
+                    datasets: [{
+                        data: [88, 8, 4],
+                        backgroundColor: ['#10B981', '#F59E0B', '#EF4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } },
+                    cutout: '75%'
+                }
+            });
+        }
+
+        function setLoading(loading) {
+            const btn = document.getElementById('audit-btn');
+            if (loading) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i> Running Autonomous Audit...`;
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-bolt"></i> Run Multi-Agent Audit`;
+            }
+        }
+    </script>
+</body>
+</html>

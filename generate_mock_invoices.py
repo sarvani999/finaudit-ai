@@ -7,7 +7,7 @@ from reportlab.lib import colors
 
 os.makedirs("data/test_invoices", exist_ok=True)
 
-def create_b2b_pdf(filename, inv_num, vendor, tax_id, po_num, cost_center, items, total):
+def create_b2b_pdf(filename, inv_num, vendor, gstin, po_num, cost_center, items, total):
     doc = SimpleDocTemplate(filename, pagesize=letter)
     styles = getSampleStyleSheet()
     story = []
@@ -19,13 +19,13 @@ def create_b2b_pdf(filename, inv_num, vendor, tax_id, po_num, cost_center, items
         fontSize=16, 
         textColor=colors.HexColor('#1E3A8A')
     )
-    story.append(Paragraph(f"INVOICE: {inv_num}", title_style))
+    story.append(Paragraph(f"TAX INVOICE: {inv_num}", title_style))
     story.append(Spacer(1, 12))
 
     # Header Details
     meta_data = [
-        [f"Vendor: {vendor}", f"Invoice Date: 2026-09-29"],
-        [f"Tax ID / EIN: {tax_id}", f"Payment Terms: Net 60"],
+        [f"Vendor: {vendor}", f"Invoice Date: 2026-10-02"],
+        [f"GSTIN: {gstin}", f"Payment Terms: Net 60"],
         [f"Purchase Order: {po_num}", f"Cost Center: {cost_center}"]
     ]
     meta_table = Table(meta_data, colWidths=[270, 270])
@@ -38,10 +38,10 @@ def create_b2b_pdf(filename, inv_num, vendor, tax_id, po_num, cost_center, items
     story.append(Spacer(1, 18))
 
     # Line Items
-    table_data = [["Line Item Description", "Qty", "Unit Price ($)", "Total ($)"]]
+    table_data = [["Line Item Description", "Qty", "Unit Rate (INR)", "Total (INR)"]]
     for item in items:
-        table_data.append([item[0], str(item[1]), f"${item[2]:,.2f}", f"${item[3]:,.2f}"])
-    table_data.append(["", "", "Total Due:", f"${total:,.2f}"])
+        table_data.append([item[0], str(item[1]), f"Rs. {item[2]:,.2f}", f"Rs. {item[3]:,.2f}"])
+    table_data.append(["", "", "Total Due (INR):", f"Rs. {total:,.2f}"])
 
     item_table = Table(table_data, colWidths=[280, 50, 100, 110])
     item_table.setStyle(TableStyle([
@@ -55,21 +55,21 @@ def create_b2b_pdf(filename, inv_num, vendor, tax_id, po_num, cost_center, items
     ]))
     story.append(item_table)
     doc.build(story)
-    print(f"Generated: {filename}")
+    print(f"Generated Indian B2B Invoice: {filename}")
 
 if __name__ == "__main__":
-    # 1. Compliant Invoice (Has valid PO, within budget)
+    # 1. Compliant Invoice (₹12,00,000 with valid PO)
     create_b2b_pdf(
         "data/test_invoices/INV_COMPLIANT.pdf",
-        "INV-2026-01", "Datadog, Inc.", "13-432190", "PO-2026-8831", "CC-ENG-402",
-        [("Cloud Infrastructure Monitoring", 12, 800.0, 9600.0), ("APM Enterprise Tier", 1, 2400.0, 2400.0)],
-        12000.0
+        "INV-IND-2026-01", "Tata Consultancy Services Ltd.", "27AAACT2727Q1ZW", "PO-IND-2026-8831", "CC-ENG-402",
+        [("Enterprise Cloud Migration & AI Support", 12, 80000.0, 960000.0), ("Annual APM Support Tier", 1, 240000.0, 240000.0)],
+        1200000.0
     )
 
-    # 2. Non-Compliant Invoice (Exceeds $50,000 & Missing PO)
+    # 2. Non-Compliant Invoice (₹65,00,000 - Exceeds 50 Lakhs & Missing PO)
     create_b2b_pdf(
         "data/test_invoices/INV_PO_BREACH.pdf",
-        "INV-2026-02", "Deloitte Consulting LLP", "06-123456", "NONE", "CC-EXEC-101",
-        [("Enterprise Cloud Architecture Advisory", 1, 65000.0, 65000.0)],
-        65000.0
+        "INV-IND-2026-02", "Deloitte Touche Tohmatsu India LLP", "07AAACD1234F1Z5", "NONE", "CC-EXEC-101",
+        [("Strategic Enterprise Digital Transformation Advisory", 1, 6500000.0, 6500000.0)],
+        6500000.0
     )
